@@ -112,16 +112,17 @@ public class Game implements Generational<Game, Grid>, Countable, Renderable {
 				return generations > 0 ? growth * 1.0 / generations : -0.1;
 		}
 
-		public static final int MaxGenerations = 10000;
+		public static final int MaxGenerations = 1000;
 
 		/**
 		 * Main program for Game of Life.
 		 * @param args the name of the starting pattern (defaults to "Blip")
 		 */
 		public static void main(String[] args) {
-				String patternName = args.length > 0 ? args[0] : "Glider3";
+				String patternName = args.length > 0 ? args[0] : "Glider1";
 				System.out.println("Game of Life with starting pattern: " + patternName);
 				final String pattern = Library.get(patternName);
+
 				final Behavior generations = run(0L, pattern);
 				System.out.println("Ending Game of Life after " + generations + " generations");
 		}
@@ -267,7 +268,8 @@ public class Game implements Generational<Game, Grid>, Countable, Renderable {
 				return testTerminationPredicate(g -> g.generation >= MaxGenerations, "having exceeded " + MaxGenerations + " generations") ||
 								testTerminationPredicate(g -> g.getCount() <= 1, "extinction") ||
 								// TODO now we look for two consecutive equivalent games...
-								testTerminationPredicate(g->g.generation>1&&g.getCount()<g.previous.getCount(), "not grow")||
+								//testTerminationPredicate(g->g.growthRate()<0&&g.generation>1, "Not grow anymore")||
+								testTerminationPredicate(g->g.generation>=1&&g.growthRate()<0, "not grow")||
 								testTerminationPredicate(Game::previousMatchingCycle, "having matching previous games");
 		}
 
